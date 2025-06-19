@@ -1,0 +1,194 @@
+/* Import Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+}
+
+#map {
+    height: 100vh;
+    width: 100%;
+    z-index: 1;
+}
+
+.sidebar {
+    width: 350px;
+    height: 100vh;
+    background: #ffffff;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    color: #333;
+}
+
+.sidebar-header h2 i {
+    color: #007bff;
+}
+
+.sidebar-header p {
+    font-size: 0.9em;
+    color: #777;
+    margin: 5px 0 0;
+}
+
+.sidebar-content h3 {
+    font-size: 1.1em;
+    color: #333;
+    border-left: 4px solid #007bff;
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+.sidebar-content p {
+    font-size: 0.9em;
+    color: #555;
+    line-height: 1.5;
+}
+
+.search-container, .info-container {
+    margin-bottom: 25px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#layer-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.search-box {
+    display: flex;
+}
+
+#search-input {
+    flex-grow: 1;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px 0 0 5px;
+    border-right: none;
+}
+
+#search-button {
+    padding: 10px 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+    transition: background-color 0.3s;
+}
+
+#search-button:hover {
+    background-color: #0056b3;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 0.8em;
+    color: #999;
+}
+
+/* Leaflet Customization */
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+}
+
+.leaflet-popup-content {
+    font-family: 'Poppins', sans-serif;
+}
+
+.leaflet-popup-content h4 {
+    margin: 0 0 10px;
+    color: #007bff;
+}
+
+.leaflet-popup-content p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+.leaflet-popup-content strong {
+    color: #333;
+}
+
+/* ... (semua CSS sebelumnya tetap sama) ... */
+
+/* ===== TAMBAHKAN KODE DI BAWAH INI ===== */
+
+#search-results-container {
+    margin-top: 20px;
+    display: none; /* Sembunyikan secara default */
+    background: #f0f8ff;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+#search-results-container h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #0056b3;
+}
+
+#results-info {
+    font-size: 0.85em;
+    color: #555;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#results-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 250px; /* Batasi tinggi agar tidak terlalu panjang */
+    overflow-y: auto; /* Tambahkan scroll jika daftar panjang */
+}
+
+#results-list li {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: 0.9em;
+}
+
+#results-list li:last-child {
+    border-bottom: none;
+}
+
+#results-list li:hover {
+    background-color: #e2efff;
+}
+
+#results-list li.active {
+    background-color: #cce5ff;
+    font-weight: 600;
+    color: #004085;
+}

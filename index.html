@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web SIG Kota Ciampino</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+        crossorigin="" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fa-solid fa-map-location-dot"></i> Web SIG Ciampino</h2>
+            <p>Sistem Informasi Geografis Kota Ciampino, Italia</p>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="search-container">
+                <h3><i class="fa-solid fa-search"></i> Pencarian Fitur</h3>
+                <p>Cari berdasarkan nama pada layer yang dipilih.</p>
+                <select id="layer-select">
+                    <option value="bangunan">Bangunan</option>
+                    <option value="infrastruktur">Infrastruktur</option>
+                    <option value="jalanan">Jalanan</option>
+                    <option value="sungai">Sungai</option>
+                </select>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Ketik nama (misal: Via)...">
+                    <button id="search-button"><i class="fa-solid fa-search"></i></button>
+                </div>
+            </div>
+
+            <div id="search-results-container">
+                <h4>Hasil Pencarian</h4>
+                <div id="results-info"></div>
+                <ul id="results-list"></ul>
+            </div>
+
+            <div class="info-container">
+                <h3><i class="fa-solid fa-info-circle"></i> Informasi</h3>
+                <p>Klik pada objek di peta (titik, garis, atau poligon) untuk melihat detail informasinya.</p>
+                <p>Gunakan kontrol layer di pojok kanan atas untuk mengganti jenis peta dasar (Jalan, Satelit, Topografi) dan menampilkan/menyembunyikan layer data.</p>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <p>&copy; 2025 - Tugas SIG</p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
