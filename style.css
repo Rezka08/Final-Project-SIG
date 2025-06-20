@@ -1,4 +1,3 @@
-/* Import Font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
 body {
@@ -137,13 +136,9 @@ body {
     color: #333;
 }
 
-/* ... (semua CSS sebelumnya tetap sama) ... */
-
-/* ===== TAMBAHKAN KODE DI BAWAH INI ===== */
-
 #search-results-container {
     margin-top: 20px;
-    display: none; /* Sembunyikan secara default */
+    display: none; 
     background: #f0f8ff;
     padding: 15px;
     border-radius: 8px;
@@ -167,8 +162,8 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 250px; /* Batasi tinggi agar tidak terlalu panjang */
-    overflow-y: auto; /* Tambahkan scroll jika daftar panjang */
+    max-height: 250px;
+    overflow-y: auto;
 }
 
 #results-list li {
