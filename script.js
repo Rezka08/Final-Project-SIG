@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         iconSize:    [25, 41], iconAnchor:  [12, 41], popupAnchor: [1, -34],
     });
 
-    // ===== PERUBAHAN DI SINI: MENAMBAHKAN PANE BARU & MENYESUAIKAN Z-INDEX =====
+    // Membuat Panes untuk kontrol urutan
     map.createPane('sungaiPane');
     map.getPane('sungaiPane').style.zIndex = 401;
     map.createPane('rel_keretaPane');
@@ -34,10 +34,8 @@ document.addEventListener('DOMContentLoaded', function () {
     map.createPane('daerahPane');
     map.getPane('daerahPane').style.zIndex = 406;
     map.createPane('batasKotaPane');
-    map.getPane('batasKotaPane').style.zIndex = 407; // Paling atas
-    // =======================================================================
+    map.getPane('batasKotaPane').style.zIndex = 407;
 
-    // 2. Persiapan Layer
     let layers = {};
     let searchResultLayer = L.layerGroup().addTo(map);
     const layerStyles = {
@@ -60,11 +58,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     async function loadGeoJSONLayers() {
-        // ===== PERUBAHAN DI SINI: Menambahkan file geojson baru untuk dimuat =====
         const layerFiles = [
             'bangunan_layer.geojson', 'batas_kota_layer.geojson', 'daerah_layer.geojson',
             'infrastruktur_layer.geojson', 'jalanan_layer.geojson', 'sungai_layer.geojson',
-            'rel_kereta_layer.geojson' // File baru ditambahkan
+            'rel_kereta_layer.geojson'
         ];
         
         for (const file of layerFiles) {
@@ -75,26 +72,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const layerName = file.replace('_layer.geojson', '');
                 
                 if (layerName === 'batas_kota') {
-                    const batasKotaCasing = L.geoJSON(data, { style: { color: '#333333', weight: 5, opacity: 0.8, fillOpacity: 0 }, pane: 'batasKotaPane' });
-                    const batasKotaTop = L.geoJSON(data, { style: { color: '#ffff00', weight: 2.5, opacity: 1, dashArray: '10, 5', fillOpacity: 0 }, pane: 'batasKotaPane' });
+                    const batasKotaCasing = L.geoJSON(data, { style: { color: '#333333', weight: 5, opacity: 0.8, fillOpacity: 0 }, pane: 'batasKotaPane', onEachFeature: onEachFeature });
+                    const batasKotaTop = L.geoJSON(data, { style: { color: '#ffff00', weight: 2.5, opacity: 1, dashArray: '10, 5', fillOpacity: 0 }, pane: 'batasKotaPane', onEachFeature: onEachFeature });
                     layers[layerName] = L.layerGroup([batasKotaCasing, batasKotaTop]);
-                
-                // ===== PERUBAHAN DI SINI: Logika baru untuk menata layer rel kereta =====
                 } else if (layerName === 'rel_kereta') {
-                    // Style klasik rel kereta: Garis hitam dengan strip putih di tengah
-                    const relCasing = L.geoJSON(data, {
-                        style: { color: '#333333', weight: 4, opacity: 0.8 },
-                        pane: 'rel_keretaPane'
-                    });
-                    const relTop = L.geoJSON(data, {
-                        style: { color: '#ffffff', weight: 2, dashArray: '10, 10' },
-                        pane: 'rel_keretaPane'
-                    });
+                    const relCasing = L.geoJSON(data, { style: { color: '#333333', weight: 4, opacity: 0.8 }, pane: 'rel_keretaPane', onEachFeature: onEachFeature });
+                    const relTop = L.geoJSON(data, { style: { color: '#ffffff', weight: 2, dashArray: '10, 10' }, pane: 'rel_keretaPane', onEachFeature: onEachFeature });
                     layers[layerName] = L.layerGroup([relCasing, relTop]);
-                    // Tambahkan juga fungsi onEachFeature agar bisa diklik
-                    layers[layerName].eachLayer(groupLayer => groupLayer.eachLayer(featureLayer => onEachFeature(featureLayer.feature, featureLayer)));
-
-                } else { // Logika untuk layer lainnya tetap sama
+                } else {
                     let geojsonLayer;
                     if (layerName === 'infrastruktur') {
                         geojsonLayer = L.geoJSON(data, {
@@ -119,26 +104,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function addLayerControl() {
-        // ===== PERUBAHAN DI SINI: Menambahkan layer baru ke kontrol =====
         const overlayMaps = {
             "Batas Kota": layers.batas_kota,
             "Daerah": layers.daerah,
             "Infrastruktur": layers.infrastruktur,
             "Bangunan": layers.bangunan,
             "Jalanan": layers.jalanan,
-            "Rel Kereta": layers.rel_kereta, // Layer baru ditambahkan di sini
+            "Rel Kereta": layers.rel_kereta,
             "Sungai": layers.sungai
         };
-
-        // Menyesuaikan urutan penambahan ke peta
         if (layers.sungai) layers.sungai.addTo(map);
-        if (layers.rel_kereta) layers.rel_kereta.addTo(map); // Layer baru ditambahkan di sini
+        if (layers.rel_kereta) layers.rel_kereta.addTo(map);
         if (layers.jalanan) layers.jalanan.addTo(map);
         if (layers.bangunan) layers.bangunan.addTo(map);
         if (layers.infrastruktur) layers.infrastruktur.addTo(map);
         if (layers.daerah) layers.daerah.addTo(map);
         if (layers.batas_kota) layers.batas_kota.addTo(map);
-
         L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
     }
 
@@ -156,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const resultsList = document.getElementById('results-list');
     const resultsInfo = document.getElementById('results-info');
 
+    // ===== FUNGSI PENCARIAN YANG SUDAH DIPERBAIKI TOTAL (v2) =====
     function searchFeature() {
         const query = searchInput.value.toLowerCase();
         const selectedLayerName = layerSelect.value;
@@ -163,24 +145,46 @@ document.addEventListener('DOMContentLoaded', function () {
         resultsList.innerHTML = '';
         searchResultLayer.clearLayers();
         if (query.trim() === '') return;
+
         const targetLayer = layers[selectedLayerName];
         if (!targetLayer) return;
+
         const foundFeatures = [];
-        // Penyesuaian untuk layer grup (batas kota, rel kereta)
-        if (targetLayer instanceof L.LayerGroup) {
-            targetLayer.eachLayer(groupLayer => {
-                groupLayer.eachLayer(featureLayer => {
-                    const featureName = featureLayer.feature.properties.name ? featureLayer.feature.properties.name.toLowerCase() : '';
-                    if (featureName.includes(query)) foundFeatures.push(featureLayer);
+        const foundIds = new Set(); 
+
+        // Fungsi ini akan mengumpulkan semua layer fitur individual,
+        // baik dari layer biasa maupun dari dalam grup.
+        function collectAllFeatureLayers(layer, collection) {
+            // Jika layer memiliki metode 'eachLayer', kita asumsikan itu adalah grup
+            // dan kita proses setiap sub-layernya secara rekursif.
+            if (typeof layer.eachLayer === 'function') {
+                layer.eachLayer(subLayer => {
+                    collectAllFeatureLayers(subLayer, collection);
                 });
-            });
-        } else { // Untuk layer biasa
-            targetLayer.eachLayer(function(layer) {
-                const featureName = layer.feature.properties.name ? layer.feature.properties.name.toLowerCase() : '';
-                if (featureName.includes(query)) foundFeatures.push(layer);
-            });
+            } 
+            // Jika layer memiliki properti 'feature', kita tahu itu adalah layer fitur akhir.
+            else if (layer.feature) {
+                collection.push(layer);
+            }
         }
+
+        const allFeatureLayers = [];
+        collectAllFeatureLayers(targetLayer, allFeatureLayers);
+
+        // Sekarang loop melalui daftar layer fitur yang sudah 'diratakan'
+        allFeatureLayers.forEach(featureLayer => {
+            const featureName = featureLayer.feature.properties.name ? featureLayer.feature.properties.name.toLowerCase() : '';
+            if (featureName.includes(query)) {
+                // Gunakan ID unik dari GeoJSON feature untuk mencegah duplikasi
+                const featureId = L.Util.stamp(featureLayer.feature);
+                if (!foundIds.has(featureId)) {
+                    foundFeatures.push(featureLayer);
+                    foundIds.add(featureId);
+                }
+            }
+        });
         
+        // Menampilkan hasil (logika ini tetap sama)
         resultsContainer.style.display = 'block';
         if (foundFeatures.length === 0) {
             resultsInfo.innerText = `Tidak ada hasil untuk "${searchInput.value}".`;
