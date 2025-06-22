@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web SIG Kota Ciampino</title>
+    <title>Web SIG Kota Roma, Italia</title>
 
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
         crossorigin="" />
     
+    <!-- Font Awesome untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,7 +22,7 @@
 
     <div class="sidebar">
         <div class="sidebar-header">
-            <h2><i class="fa-solid fa-map-location-dot"></i> Web SIG Ciampino</h2>
+            <h2><i class="fa-solid fa-map-location-dot"></i>Web SIG Kota Roma, Italia</h2>
             <p>Sistem Informasi Geografis Kota Ciampino, Italia</p>
         </div>
 
@@ -27,14 +30,18 @@
             <div class="search-container">
                 <h3><i class="fa-solid fa-search"></i> Pencarian Fitur</h3>
                 <p>Cari berdasarkan nama pada layer yang dipilih.</p>
+                
                 <select id="layer-select">
                     <option value="bangunan">Bangunan</option>
+                    <option value="daerah">Daerah</option>
                     <option value="infrastruktur">Infrastruktur</option>
                     <option value="jalanan">Jalanan</option>
+                    <option value="rel_kereta">Rel Kereta</option>
                     <option value="sungai">Sungai</option>
                 </select>
+
                 <div class="search-box">
-                    <input type="text" id="search-input" placeholder="Ketik nama (misal: Via)...">
+                    <input type="text" id="search-input" placeholder="Ketik nama (misal: Ferrovia)...">
                     <button id="search-button"><i class="fa-solid fa-search"></i></button>
                 </div>
             </div>
@@ -48,11 +55,12 @@
             <div class="info-container">
                 <h3><i class="fa-solid fa-map"></i> Legenda Peta</h3>
                 <ul class="legend-list">
-                    <li><span class="legend-color" style="background-color: #ff7800; border: 2px solid #ff7800;"></span>Bangunan</li>
                     <li><span class="legend-color" style="background-color: #ffff00; border: 2px solid #333333; height: 10px;"></span>Batas Kota</li>
-                    <li><span class="legend-color" style="background-color: rgba(0, 110, 255, 0.1); border: 2px solid #006eff;"></span>Daerah</li>
-                    <li><i class="fa-solid fa-map-marker-alt legend-icon"></i> Infrastruktur</li>
-                    <li><span class="legend-color" style="background-color: #ffffff; border: 2px solid #cccccc;"></span>Jalanan</li>
+                    <li><span class="legend-color" style="background-color: rgba(0, 110, 255, 0.1);"></span>Daerah</li>
+                    <li><i class="fa-solid fa-location-dot legend-icon"></i> Infrastruktur</li>
+                    <li><span class="legend-color" style="background-color: #ff7800;"></span>Bangunan</li>
+                    <li><span class="legend-color" style="background-color: #ffffff; border: 1px solid #cccccc;"></span>Jalanan</li>
+                    <li><span class="legend-color" style="background: repeating-linear-gradient(45deg, #333, #333 4px, #fff 4px, #fff 8px);"></span>Rel Kereta</li>
                     <li><span class="legend-color" style="background-color: #00aeff;"></span>Sungai</li>
                 </ul>
                 <p class="legend-footer">Gunakan kontrol layer di pojok kanan atas untuk menampilkan/menyembunyikan layer.</p>
