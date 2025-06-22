@@ -187,3 +187,41 @@ body {
     font-weight: 600;
     color: #004085;
 }
+
+/* Styling untuk Legenda Peta */
+.legend-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 0 0;
+}
+
+.legend-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 30px;
+    height: 15px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+.legend-icon {
+    margin-right: 13px;
+    margin-left: 3px;
+    color: #555; /* Warna ikon disesuaikan agar netral */
+    font-size: 1.2em;
+    text-align: center;
+    width: 25px;
+}
+
+.legend-footer {
+    font-size: 0.8em !important;
+    color: #777 !important;
+    margin-top: 20px;
+    text-align: center;
+}
