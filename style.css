@@ -15,10 +15,11 @@ body {
 
 .sidebar {
     width: 350px;
+    min-width: 350px;
     height: 100vh;
     background: #ffffff;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 2;
+    z-index: 1000; /* Pastikan sidebar di atas minimap */
     display: flex;
     flex-direction: column;
     padding: 20px;
@@ -62,7 +63,7 @@ body {
     line-height: 1.5;
 }
 
-.search-container, .info-container {
+.search-container {
     margin-bottom: 25px;
     background: #f9f9f9;
     padding: 15px;
@@ -104,41 +105,9 @@ body {
     background-color: #0056b3;
 }
 
-.sidebar-footer {
-    margin-top: auto;
-    text-align: center;
-    padding-top: 15px;
-    border-top: 1px solid #eee;
-    font-size: 0.8em;
-    color: #999;
-}
-
-/* Leaflet Customization */
-.leaflet-popup-content-wrapper {
-    border-radius: 8px;
-}
-
-.leaflet-popup-content {
-    font-family: 'Poppins', sans-serif;
-}
-
-.leaflet-popup-content h4 {
-    margin: 0 0 10px;
-    color: #007bff;
-}
-
-.leaflet-popup-content p {
-    margin: 5px 0;
-    font-size: 0.9em;
-}
-
-.leaflet-popup-content strong {
-    color: #333;
-}
-
 #search-results-container {
     margin-top: 20px;
-    display: none; 
+    display: none;
     background: #f0f8ff;
     padding: 15px;
     border-radius: 8px;
@@ -188,40 +157,91 @@ body {
     color: #004085;
 }
 
-/* Styling untuk Legenda Peta */
+.info-container {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
 .legend-list {
     list-style: none;
     padding: 0;
-    margin: 15px 0 0 0;
+    margin: 10px 0 0;
 }
 
 .legend-list li {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-size: 0.9em;
+    color: #555;
 }
 
 .legend-color {
     display: inline-block;
-    width: 30px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
     margin-right: 10px;
-    border-radius: 5px;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
 .legend-icon {
-    margin-right: 13px;
-    margin-left: 3px;
-    color: #555; /* Warna ikon disesuaikan agar netral */
+    margin-right: 10px;
     font-size: 1.2em;
+    color: #007bff;
     text-align: center;
-    width: 25px;
+    width: 20px;
 }
 
 .legend-footer {
-    font-size: 0.8em !important;
-    color: #777 !important;
-    margin-top: 20px;
+    margin-top: 15px;
+    font-size: 0.8em;
+    color: #888;
     text-align: center;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+    font-size: 0.8em;
+    color: #999;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+}
+
+.leaflet-popup-content {
+    font-family: 'Poppins', sans-serif;
+}
+
+.leaflet-popup-content h4 {
+    margin: 0 0 10px;
+    color: #007bff;
+}
+
+.leaflet-popup-content p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+.leaflet-popup-content strong {
+    color: #333;
+}
+
+/* ===== STYLE BARU UNTUK MINIMAP ===== */
+.leaflet-control-minimap {
+    border: 2px solid rgba(0,0,0,0.2);
+    border-radius: 8px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+}
+.leaflet-control-minimap a.leaflet-control-minimap-toggle-display {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
 }

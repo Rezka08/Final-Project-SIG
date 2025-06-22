@@ -6,13 +6,26 @@ document.addEventListener('DOMContentLoaded', function () {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }),
         'Satelit': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+            attribution: 'Tiles &copy; Esri'
         }),
         'Topografi': L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+            attribution: 'Map data: &copy; OpenStreetMap'
         })
     };
     baseMaps['Satelit'].addTo(map);
+
+    // ===== PERUBAHAN DI SINI: INISIALISASI MINIMAP =====
+    // Buat sebuah layer peta dasar khusus untuk minimap (biasanya yang simpel)
+    const miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    
+    // Buat kontrol minimap
+    const miniMap = new L.Control.MiniMap(miniMapLayer, {
+        position: 'bottomleft', // Posisi di kiri bawah
+        toggleDisplay: true,    // Tampilkan tombol untuk menyembunyikan/menampilkan
+        minimized: true,        // Mulai dalam keadaan kecil/terminimize
+        zoomLevelOffset: -5     // Buat minimap lebih di-zoom-out dari peta utama
+    }).addTo(map);
+    // ====================================================
 
     const noShadowIcon = new L.Icon({
         iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -137,7 +150,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const resultsList = document.getElementById('results-list');
     const resultsInfo = document.getElementById('results-info');
 
-    // ===== FUNGSI PENCARIAN YANG SUDAH DIPERBAIKI TOTAL (v2) =====
     function searchFeature() {
         const query = searchInput.value.toLowerCase();
         const selectedLayerName = layerSelect.value;
@@ -145,37 +157,24 @@ document.addEventListener('DOMContentLoaded', function () {
         resultsList.innerHTML = '';
         searchResultLayer.clearLayers();
         if (query.trim() === '') return;
-
         const targetLayer = layers[selectedLayerName];
         if (!targetLayer) return;
-
         const foundFeatures = [];
-        const foundIds = new Set(); 
-
-        // Fungsi ini akan mengumpulkan semua layer fitur individual,
-        // baik dari layer biasa maupun dari dalam grup.
+        const foundIds = new Set();
         function collectAllFeatureLayers(layer, collection) {
-            // Jika layer memiliki metode 'eachLayer', kita asumsikan itu adalah grup
-            // dan kita proses setiap sub-layernya secara rekursif.
             if (typeof layer.eachLayer === 'function') {
                 layer.eachLayer(subLayer => {
                     collectAllFeatureLayers(subLayer, collection);
                 });
-            } 
-            // Jika layer memiliki properti 'feature', kita tahu itu adalah layer fitur akhir.
-            else if (layer.feature) {
+            } else if (layer.feature) {
                 collection.push(layer);
             }
         }
-
         const allFeatureLayers = [];
         collectAllFeatureLayers(targetLayer, allFeatureLayers);
-
-        // Sekarang loop melalui daftar layer fitur yang sudah 'diratakan'
         allFeatureLayers.forEach(featureLayer => {
             const featureName = featureLayer.feature.properties.name ? featureLayer.feature.properties.name.toLowerCase() : '';
             if (featureName.includes(query)) {
-                // Gunakan ID unik dari GeoJSON feature untuk mencegah duplikasi
                 const featureId = L.Util.stamp(featureLayer.feature);
                 if (!foundIds.has(featureId)) {
                     foundFeatures.push(featureLayer);
@@ -183,8 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
         });
-        
-        // Menampilkan hasil (logika ini tetap sama)
         resultsContainer.style.display = 'block';
         if (foundFeatures.length === 0) {
             resultsInfo.innerText = `Tidak ada hasil untuk "${searchInput.value}".`;
