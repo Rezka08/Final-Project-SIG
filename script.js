@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
     // 1. Inisialisasi Peta dan Base Maps
-    const map = L.map('map').setView([41.8016, 12.6065], 13);
+    const map = L.map('map').setView([41.90184,12.48520], 10.5);
     const baseMaps = {
-        'Jalan Raya': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        'OpenSreetMap': L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }),
         'Satelit': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -14,18 +14,13 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     baseMaps['Satelit'].addTo(map);
 
-    // ===== PERUBAHAN DI SINI: INISIALISASI MINIMAP =====
-    // Buat sebuah layer peta dasar khusus untuk minimap (biasanya yang simpel)
     const miniMapLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
-    
-    // Buat kontrol minimap
     const miniMap = new L.Control.MiniMap(miniMapLayer, {
-        position: 'bottomleft', // Posisi di kiri bawah
-        toggleDisplay: true,    // Tampilkan tombol untuk menyembunyikan/menampilkan
-        minimized: true,        // Mulai dalam keadaan kecil/terminimize
-        zoomLevelOffset: -5     // Buat minimap lebih di-zoom-out dari peta utama
+        position: 'bottomleft',
+        toggleDisplay: true,
+        minimized: true,
+        zoomLevelOffset: -5
     }).addTo(map);
-    // ====================================================
 
     const noShadowIcon = new L.Icon({
         iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
@@ -54,8 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const layerStyles = {
         bangunan: { color: '#ff7800', weight: 2, opacity: 0.8, fillOpacity: 0.3 },
         daerah: { weight: 0, fillColor: '#006eff', fillOpacity: 0.1 },
-        jalanan: { color: '#ffffff', weight: 2.5, opacity: 0.9 },
-        sungai: { color: '#00aeff', weight: 4, opacity: 0.8 }
+        jalanan: { color: '#ffffff', weight: 1, opacity: 0.9 },
+        sungai: { color: '#00aeff', weight: 2.5, opacity: 0.7 }
     };
 
     function onEachFeature(feature, layer) {
@@ -99,7 +94,25 @@ document.addEventListener('DOMContentLoaded', function () {
                             pointToLayer: (feature, latlng) => L.marker(latlng, { pane: 'infrastrukturPane', icon: noShadowIcon }),
                             onEachFeature: onEachFeature
                         });
-                    } else {
+                    } else if (layerName === 'daerah') {
+                        geojsonLayer = L.geoJSON(data, {
+                            style: layerStyles[layerName] || {},
+                            pane: 'daerahPane',
+                            onEachFeature: function(feature, layer) {
+                                // Tetap tambahkan popup yang bisa diklik
+                                onEachFeature(feature, layer);
+
+                                // Tambahkan label nama yang permanen
+                                if (feature.properties && feature.properties.name) {
+                                    layer.bindTooltip(feature.properties.name, {
+                                        permanent: true,     
+                                        direction: 'center',
+                                        className: 'area-label'
+                                    }).openTooltip();
+                                }
+                            }
+                        });
+                    } else { 
                         geojsonLayer = L.geoJSON(data, {
                             style: layerStyles[layerName] || {},
                             onEachFeature: onEachFeature,
@@ -149,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const resultsContainer = document.getElementById('search-results-container');
     const resultsList = document.getElementById('results-list');
     const resultsInfo = document.getElementById('results-info');
-
+    
     function searchFeature() {
         const query = searchInput.value.toLowerCase();
         const selectedLayerName = layerSelect.value;
@@ -163,9 +176,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const foundIds = new Set();
         function collectAllFeatureLayers(layer, collection) {
             if (typeof layer.eachLayer === 'function') {
-                layer.eachLayer(subLayer => {
-                    collectAllFeatureLayers(subLayer, collection);
-                });
+                layer.eachLayer(subLayer => collectAllFeatureLayers(subLayer, collection));
             } else if (layer.feature) {
                 collection.push(layer);
             }
