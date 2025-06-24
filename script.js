@@ -22,6 +22,62 @@ document.addEventListener('DOMContentLoaded', function () {
         zoomLevelOffset: -5
     }).addTo(map);
 
+    // === MENAMBAHKAN KONTROL KOMPAS ===
+    L.Control.Compass = L.Control.extend({
+        onAdd: function(map) {
+            var div = L.DomUtil.create('div', 'compass-control');
+            
+            // HTML untuk kompas
+            div.innerHTML = `
+                <div class="compass-container">
+                    <div class="compass-rose">
+                        <div class="compass-needle">
+                            <div class="needle-north"></div>
+                            <div class="needle-south"></div>
+                        </div>
+                        <div class="compass-labels">
+                            <span class="compass-n">N</span>
+                            <span class="compass-e">E</span>
+                            <span class="compass-s">S</span>
+                            <span class="compass-w">W</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Event listener untuk reset orientasi peta ke utara
+            L.DomEvent.on(div, 'click', function(e) {
+                L.DomEvent.stopPropagation(e);
+                div.classList.add('clicked');
+                
+                // Reset bearing ke 0 (utara)
+                map.setBearing(0);
+                
+                // Hapus class clicked setelah animasi
+                setTimeout(() => {
+                    div.classList.remove('clicked');
+                }, 300);
+            });
+            
+            // Mencegah drag pada peta saat mengklik kompas
+            L.DomEvent.disableClickPropagation(div);
+            
+            return div;
+        },
+        
+        onRemove: function(map) {
+            // Cleanup jika diperlukan
+        }
+    });
+    
+    // Menambahkan kontrol kompas ke peta
+    L.control.compass = function(opts) {
+        return new L.Control.Compass(opts);
+    }
+    
+    L.control.compass({ position: 'bottomright' }).addTo(map);
+    // === AKHIR KONTROL KOMPAS ===
+
     const noShadowIcon = new L.Icon({
         iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
         iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
